@@ -1,0 +1,43 @@
+<div class="android-header mdl-layout__header mdl-layout__header--waterfall">
+    <div class="mdl-layout__header-row">
+      <span class="android-title mdl-layout-title">
+        <img class="android-logo-image" href="{% url 'tayo:main'%}" src="../../static/images/logo.png" style="object-fit:cover; height:100%;">
+      </span>
+      <!-- Add spacer, to align navigation to the right in desktop -->
+      <div class="android-header-spacer mdl-layout-spacer"></div>
+
+      <!-- Navigation -->
+      <div class="android-navigation-container">
+        <nav class="android-navigation mdl-navigation">
+            <a class="mdl-navigation__link" style="text-decoration-line:none;" href="{% url 'tayo:main'%}">홈</a>
+            <a class="mdl-navigation__link" style="text-decoration-line:none;" href="{% url 'tayo:info'%}">이용방법</a>
+            <a class="mdl-navigation__link" style="text-decoration-line:none;" href="{% url 'tayo:reserve'%}">예약하기</a>
+            <a class="mdl-navigation__link" style="text-decoration-line:none;" href="{% url 'tayo:parking'%}">주차장현황</a>
+            <button style="background-color:white;" class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" id="more-button">
+                <i class="material-icons">person</i>
+            </button>
+            <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect" for="more-button">
+                {% if user.is_authenticated %}
+                  <a class="mdl-menu__item" href="{% url 'common:mypage'%}">마이페이지</a>
+                  <a class="mdl-menu__item" href="{% url 'common:logout'%}">로그아웃</a>
+                {% else %}
+                  <a class="mdl-menu__item" href="{% url 'common:login'%}">로그인</a>
+                {% endif %}
+            </ul>
+        </nav>
+      </div>
+
+      
+    </div>
+</div>
+
+<div class="android-drawer mdl-layout__drawer">
+    <span class="mdl-layout-title" style='background-color:#82B7F9;'>
+    </span>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="{% url 'tayo:main'%}">홈</a>
+      <a class="mdl-navigation__link" href="{% url 'tayo:info'%}">이용방법</a>
+      <a class="mdl-navigation__link" href="{% url 'tayo:reserve'%}">예약하기</a>
+      <a class="mdl-navigation__link" href="{% url 'tayo:parking'%}">주차장현황</a>
+    </nav>
+</div>
