@@ -86,8 +86,8 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "tayo-test-user",
         "USER" : "admin",
-        "PASSWORD" : "",
-        "HOST" : "",
+        "PASSWORD" : "saf",
+        "HOST" : "asdf",
         "PORT" : "3306",
         "OPTIONS" : {
             'init_command' : 'SET sql_mode="STRICT_TRANS_TABLES"'
