@@ -1,0 +1,9 @@
+diff a/config/settings.py b/config/settings.py	(rejected hunks)
+@@ -83,7 +83,6 @@
+         "ENGINE": "django.db.backends.mysql",
+         "NAME": "tayo-test-db",
+         "USER" : "admin",
+-        "PASSWORD" : "password",
+         "PASSWORD" : "passw0rd",
+         "HOST" : "host",
+         "PORT" : "port",

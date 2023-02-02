@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!doctype html>
+<html lang="en">
+  <body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      {% include 'navbar.html'%} 
+      <div class="android-content mdl-layout__content">
+        <a name="top"></a>
+      </br>
+      </br>
+        <div class="android-be-customized-section mdl-typography--text-center" style="display:flex;justify-content:center;align-items:center;top:30%;">
+            <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:40%">
+                <div class="mdl-card__title">
+                    <h2 class="mdl-card__title-text">{{user.phone_number}}의 마이페이지</h2></br>
+                </div>
+                <div class="mdl-card__supporting-text">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+                      <tbody>
+                        <tr style="text-align:center">
+                          <td>이메일</td>
+                          <td>{{user.email}}</td>
+                        </tr>
+                        <tr style="text-align:center">
+                          <td>차량번호</td>
+                          <td>{{user.car_number}}</td>
+                        </tr>
+                        <tr style="text-align:center">
+                          <td>소유주차공간</td>
+                          <td>
+                            {% if user.parking_number%}
+                              {{user.parking_number}}
+                            {% else %}
+                              없음
+                            {% endif %}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  </br>
+                  <button onclick="location.href='{% url 'common:add' %}'" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                    주차공간 등록하기
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% include 'footer.html'%} 
+      </div>
+    </div>
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  </body>
+</html>
+
+{% endblock %}
