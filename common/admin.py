@@ -10,18 +10,18 @@ class UserAdmin(BaseUserAdmin):
     add_form = UserCreationForm
 
     # 관리자페이지에 나타낼 부분 설정
-    list_display = ('phone_number','email','car_number','parking_number','is_admin')
+    list_display = ('phone_number','email','car_number','is_admin')
     list_filter = ('is_admin',)
     fieldsets = (
         (None,{'fields':('phone_number','email','password')}),
-        ("Personal info",{'fields':('car_number','parking_number')}),
+        ("Personal info",{'fields':('car_number',)}),
         ("Permissions",{'fields':('is_admin',)})
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('phone_number','email', 'car_number','parking_number', 'password1', 'password2'),
+            'fields': ('phone_number','email', 'car_number', 'password1', 'password2'),
         }),
     )
     search_fields = ('email',)

@@ -83,7 +83,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "tayo",
         "USER" : "admin",
-        "PASSWORD" : "********",
+        "PASSWORD" : "pw",
         "HOST" : "pjt1-mysql.chr1ojp8pl0h.eu-west-3.rds.amazonaws.com",
         "PORT" : "3306",
         "OPTIONS" : {

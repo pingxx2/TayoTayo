@@ -9,46 +9,64 @@
       {% include 'navbar.html'%} 
       <div class="android-content mdl-layout__content">
         <a name="top"></a>
-      </br>
-      </br>
+        </br>
+        </br>
         <div class="android-be-customized-section mdl-typography--text-center" style="display:flex;justify-content:center;align-items:center;top:30%;">
-            <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:40%">
-                <div class="mdl-card__title">
-                    <h2 class="mdl-card__title-text">{{user.phone_number}}의 마이페이지</h2></br>
-                </div>
-                <div class="mdl-card__supporting-text">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
-                      <tbody>
-                        <tr style="text-align:center">
-                          <td>이메일</td>
-                          <td>{{user.email}}</td>
-                        </tr>
-                        <tr style="text-align:center">
-                          <td>차량번호</td>
-                          <td>{{user.car_number}}</td>
-                        </tr>
-                        <tr style="text-align:center">
-                          <td>소유주차공간</td>
-                          <td>
-                            {% if user.parking_number%}
-                              {{user.parking_number}}
-                            {% else %}
-                              없음
-                            {% endif %}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  </br>
-                  <button onclick="location.href='{% url 'common:add' %}'" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
-                    주차공간 등록하기
-                  </button>
-                </div>
+          <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:40%">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text">{{user.phone_number}}의 마이페이지</h2></br>
+            </div>
+            <div class="mdl-card__supporting-text">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+                  <tbody>
+                    <tr>
+                      <td>이메일</td>
+                      <td>{{user.email}}</td>
+                    </tr>
+                    <tr>
+                      <td style="text-align:center">차량번호</td>
+                      <td style="text-align:center">{{user.car_number}}</td>
+                    </tr>
+                    <tr style="text-align:center">
+                      <td style="text-align:center">소유주차공간</td>
+                      <td style="text-align:center">
+                        {% if user.parking_set.all%}
+                          있음
+                        {% else %}
+                          없음
+                        {% endif %}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
+              </br>
+              <button onclick="location.href='{% url 'common:add' %}'" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                주차공간 등록하기
+              </button>
             </div>
           </div>
+        </div></br></br>
+        {% if user.parking_set.all%}
+        <div class="android-be-customized-section mdl-typography--text-center" style="display:flex;justify-content:center;align-items:center;top:30%;">
+          <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:40%">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text">주차공간 관리</h2></br>
+            </div>
+            <div class="mdl-card__supporting-text">
+              <select name="select_box" id="select_box" onchange="select()">
+                <option value="none" selected>====선택====</option>
+                {% for i in user.parking_set.all %}
+                  <option value="{{ i.parking_name }}">{{ i.parking_name }}</option>
+                {% endfor %}
+              </select>
+              </br></br>
+              <div id="map" style="width:100%;height:350px;"></div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
         {% include 'footer.html'%} 
       </div>
     </div>
@@ -56,4 +74,58 @@
   </body>
 </html>
 
+{% endblock %}
+
+{% block script%}
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ce903cdfbeb38247132d86bac3923a8b"></script>
+<script>
+
+  
+
+  function select(){
+    //select 된 값을 가져와서 select_value에 저장
+    var value_str = document.getElementById('select_box')
+    var select_value = value_str.options[value_str.selectedIndex].value;
+  
+    var lat = "";
+    var lon = ""; 
+
+    //현재 select_value와 DB 내의 parking_name이 일치하는 장소의 위도, 경도 값 저장
+    {% for i in user.parking_set.all %}
+      if( '{{i.parking_name}}'== select_value ){
+        lat = '{{ i.lat }}';
+        lon = '{{ i.lon }}';
+      }
+    {% endfor %}
+
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+
+    //지도를 미리 생성
+    var map = new daum.maps.Map(mapContainer, mapOption);
+
+    //마커를 미리 생성
+    var marker = new daum.maps.Marker({
+        position: new daum.maps.LatLng(37.537187, 127.005476),
+        map: map
+    });
+
+     // 해당 주소에 대한 좌표를 받아서
+     var coords = new daum.maps.LatLng(lat, lon);
+
+     // 지도를 보여준다.
+     mapContainer.style.display = "block";
+     map.relayout();
+
+     // 지도 중심을 변경한다.
+     map.setCenter(coords);
+     
+     // 마커를 결과값으로 받은 위치로 옮긴다.
+     marker.setPosition(coords);
+  }
+  
+  </script>
 {% endblock %}

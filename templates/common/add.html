@@ -17,33 +17,64 @@
                     <h2 class="mdl-card__title-text">주차공간 등록하기</h2></br>
                 </div>
                 <div class="mdl-card__supporting-text">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-                        <table class="">
-                            <tbody>
-                                <tr>
-                                    <td >
-                                        <input type="text" class="mdl-textfield__input" id="sample5_address" placeholder="주소"></input>
-                                    </td>
-                                    <td>
-                                        <input type="button" class="mdl-js-button mdl-button--raised mdl-button--colored" style="border:none;" onclick="sample5_execDaumPostcode()" value="검색"></input>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
-                                    </td>
-                                </tr>
-                            </tbody>    
-                        </table>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <form method="post" action="{% url 'common:parking_add' %}" class="post-form">
+                            {% csrf_token %}
+                            {% include 'form_errors.html'%}
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input type="text" class="mdl-textfield__input" id="parking_name" name="parking_name" placeholder="주차공간명"></input></br></br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td >
+                                            <input type="text" class="mdl-textfield__input" id="main_address" placeholder="주소"></input>
+                                        </td>
+                                        <td>
+                                            <input style="position:static" type="button" class=" mdl-button mdl-js-button mdl-button--raised mdl-button--colored" style="border:none;" onclick="parking_address()" value="검색"></input>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input type="hidden" id="lat" name="lat" value=""></input>
+                                            <input type="hidden" id="lon" name="lon" value=""></input>
+                                            <div id="map" style="width:100%;height:300px;"></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                        </br>
+                                            <input type="text" class="mdl-textfield__input" id="detail_add" name="detail_add" value="" placeholder="상세주소 입력(선택)"></input>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                        </br></br>
+                                            등록 즉시 예약이 가능하도록 설정하시겠습니까?
+                                        </br></br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <input type="radio" name="res_state" id="res_state" value="ON">예약가능
+                                            <input type="radio" name="res_state" id="res_state" value="OFF" checked="checked">예약불가능
+                                        </td>
+                                    </tr>
+                                </tbody>    
+                            </table>
+                            </br></br>
+                            <button type="submit" style="position:static" onclick="location.href='{% url 'common:mypage' %}'" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                                등록
+                            </button>
+                        </form>
                     </div>
-                  </div>
-                  </br>
                 </div>
-              </div>
             </div>
-            {% include 'footer.html'%}
           </div>
+            </br></br>
+          {% include 'footer.html'%}
       </div>
     </div>
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
@@ -73,13 +104,13 @@
     });
 
 
-    function sample5_execDaumPostcode() {
+    function parking_address() {
         new daum.Postcode({
             oncomplete: function(data) {
                 var addr = data.address; // 최종 주소 변수
 
                 // 주소 정보를 해당 필드에 넣는다.
-                document.getElementById("sample5_address").value = addr;
+                document.getElementById("main_address").value = addr;
                 // 주소로 상세 정보를 검색
                 geocoder.addressSearch(data.address, function(results, status) {
                     // 정상적으로 검색이 완료됐으면
@@ -95,11 +126,47 @@
                         // 지도 중심을 변경한다.
                         map.setCenter(coords);
                         // 마커를 결과값으로 받은 위치로 옮긴다.
-                        marker.setPosition(coords)
+                        marker.setPosition(coords);
+
+                        // 위도, 경도 값 input의 value에 추가
+                        var lat_value = result.y;
+                        var lon_value = result.x;
+
+                        //var resultLat = document.getElementById('lat');
+                        //reusltLat.innerHTML = lat_value.toString();
+                        document.getElementById('lat').value = lat_value;
+                        
+                        //var resultLon = document.getElementById('lon');
+                        //resultLon.innerHTML = lon_value.toString();
+                        document.getElementById('lon').value = lon_value;
                     }
                 });
             }
         }).open();
     }
+    // 지도에 클릭 이벤트를 등록합니다
+    // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+    kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+        
+        // 클릭한 위도, 경도 정보를 가져옵니다 
+        var latlng = mouseEvent.latLng; 
+        
+        // 마커 위치를 클릭한 위치로 옮깁니다
+        marker.setPosition(latlng);
+        
+        // 위도, 경도 값 input의 value에 추가
+        var lat_value = latlng.getLat()
+        var lon_value = latlng.getLon()
+
+        //var resultLat = document.getElementById('lat');
+        //reusltLat.innerHTML = lat_value.toString();
+        document.getElementById('lat').value = lat_value.toString();
+        
+        //var resultLon = document.getElementById('lon');
+        //resultLon.innerHTML = lon_value.toString();
+        document.getElementById('lon').value = lon_value.toString();
+    
+    });
+
 </script>
 {% endblock%}

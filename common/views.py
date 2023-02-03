@@ -1,7 +1,11 @@
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, redirect
 from common.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from .models import Parking
+from .forms import ParkingCreateForm
 
 def signup(request):
     """
@@ -27,3 +31,24 @@ def mypage(request):
 
 def add(request):
     return render(request, 'common/add.html')
+
+
+@login_required(login_url='common:login')
+def parking_add(request):
+    """
+    parking 테이블에 값 추가
+    """
+    if request.method == 'POST':
+        form = ParkingCreateForm(request.POST)
+        if form.is_valid():
+            parking = form.save(commit=False)
+            parking.owner = request.user
+            parking.save()
+            
+            return redirect('common:mypage')
+    else:
+        form = ParkingCreateForm()
+    
+    context={}
+
+    return render(request, 'common/mypage.html', context)

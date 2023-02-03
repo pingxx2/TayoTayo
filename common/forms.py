@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from .models import User
+from .models import Parking
 
 """
 기존 클래스
@@ -19,7 +20,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('phone_number','email','car_number','parking_number')
+        fields = ('phone_number','email','car_number')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -41,7 +42,13 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('phone_number','email','car_number','parking_number')
+        fields = ('phone_number','email','car_number')
 
     def clean_password(self):
         return self.initial["password"]
+
+
+class ParkingCreateForm(forms.ModelForm):
+    class Meta:
+        model = Parking
+        fields = ('parking_number', 'parking_name', 'lat', 'lon', 'res_state', 'detail_add', 'finish_car_number', 'parking_car_number')

@@ -5,7 +5,7 @@ class UserManager(BaseUserManager):
     """
     BaseUserManager에서 정보 가져와서 필요한 부분 수정
     """
-    def create_user(self, email, car_number, phone_number, parking_number, password=None):
+    def create_user(self, email, car_number, phone_number, password=None):
         if not phone_number:
             raise ValueError('must have user email')
         if not email:
@@ -14,19 +14,17 @@ class UserManager(BaseUserManager):
             phone_number=phone_number,
             email=self.normalize_email(email),
             car_number=car_number,
-            parking_number=parking_number
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, car_number, phone_number, parking_number, password):
+    def create_superuser(self, email, car_number, phone_number,password):
         user = self.create_user(
             phone_number=phone_number,
             password=password,
             email=self.normalize_email(email),
             car_number=car_number,
-            parking_number = parking_number
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -39,12 +37,10 @@ class User(AbstractBaseUser):
     phone_number : 전화번호, 최대길이 20, 중복불가, - 없이 입력
     email : 이메일, 최대길이 255, 중복불가, 이메일 형식 지켜야함
     car_number : 차량번호, 최대길이 20, 공백없음 + replace(" ", "")으로 공백제거
-    parking_number : 주차공간번호, 외래키, Parking 테이블과 연결, 삭제되면 NULL로 변경, NULL 저장 가능, 폼 양식 비우기 가능
     """
     phone_number = models.CharField(max_length=20,unique=True)
     email = models.EmailField(max_length=255,unique=True)
     car_number = models.CharField(max_length=20)
-    parking_number = models.ForeignKey("Parking", on_delete=models.SET_NULL, db_column='parking_number', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -81,7 +77,7 @@ class Parking(models.Model):
     """
     주차공간 테이블 생성
 
-    parking_number : 주차공간번호, 최대길이 20, 기본키(=NULL안됨, 중복안됨)
+    parking_number : 주차공간번호, 자동추가필드(인덱스), 기본키(=NULL안됨, 중복안됨)
     lat : 위도, 최대길이 20
     lon : 경도, 최대길이 20
     res_state : 예약가능상태, 최대길이 20, ON/OFF로 상태 표기
@@ -89,13 +85,15 @@ class Parking(models.Model):
     finish_car_number : 등록된 차량번호, 최대길이 20, NULL 저장 가능
     parking_car_number : 주차된 차량번호, 최대길이 20, NULL 저장 가능
     """
-    parking_number = models.CharField(max_length=20, primary_key=True)
+    parking_number = models.AutoField(primary_key=True)
+    parking_name = models.CharField(max_length=20)
     lat = models.CharField(max_length=20)
     lon = models.CharField(max_length=20)
     res_state = models.CharField(max_length=20)
     detail_add = models.CharField(max_length=255, null=True, blank=True)
-    finish_car_number = models.CharField(max_length=20, null=True)
-    parking_car_number = models.CharField(max_length=20, null=True)
+    finish_car_number = models.CharField(max_length=20, null=True, blank=True)
+    parking_car_number = models.CharField(max_length=20, null=True, blank=True)
+    owner = models.ForeignKey("User", on_delete=models.CASCADE, db_column='owner') # user모델에서 parking_set로 관계 생김
 
 
 class Res(models.Model):
