@@ -57,7 +57,9 @@
             <div class="mdl-card__supporting-text">
               <select name="select_box" id="select_box" onchange="select()">
                 <option value="none" selected>====선택====</option>
+                <!-- 유저가 소유하고 있는 주차공간 for문으로 하나씩 출력 -->
                 {% for i in user.parking_set.all %}
+                  <!-- 옵션에 주차공간 추가-->
                   <option value="{{ i.parking_name }}">{{ i.parking_name }}</option>
                 {% endfor %}
               </select>
@@ -79,18 +81,17 @@
 {% block script%}
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ce903cdfbeb38247132d86bac3923a8b"></script>
 <script>
-
-  
-
   function select(){
     //select 된 값을 가져와서 select_value에 저장
     var value_str = document.getElementById('select_box')
     var select_value = value_str.options[value_str.selectedIndex].value;
   
+    // 위도, 경도 저장할 변수 생성
     var lat = "";
     var lon = ""; 
 
-    //현재 select_value와 DB 내의 parking_name이 일치하는 장소의 위도, 경도 값 저장
+    //현재 유저가 가지고 있는 주차공간중에
+    //select_value와 DB 내의 parking_name이 일치하는 장소의 위도, 경도 값 저장
     {% for i in user.parking_set.all %}
       if( '{{i.parking_name}}'== select_value ){
         lat = '{{ i.lat }}';
@@ -98,10 +99,13 @@
       }
     {% endfor %}
 
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    // 지도를 표시할 div
+    var mapContainer = document.getElementById('map'), 
         mapOption = {
-            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-            level: 3 // 지도의 확대 레벨
+            // 지도의 중심좌표
+            center: new daum.maps.LatLng(lat, lon),
+            // 지도의 확대 레벨
+            level: 3 
         };
 
     //지도를 미리 생성
@@ -109,22 +113,9 @@
 
     //마커를 미리 생성
     var marker = new daum.maps.Marker({
-        position: new daum.maps.LatLng(37.537187, 127.005476),
+        position: new daum.maps.LatLng(lat, lon),
         map: map
     });
-
-     // 해당 주소에 대한 좌표를 받아서
-     var coords = new daum.maps.LatLng(lat, lon);
-
-     // 지도를 보여준다.
-     mapContainer.style.display = "block";
-     map.relayout();
-
-     // 지도 중심을 변경한다.
-     map.setCenter(coords);
-     
-     // 마커를 결과값으로 받은 위치로 옮긴다.
-     marker.setPosition(coords);
   }
   
   </script>

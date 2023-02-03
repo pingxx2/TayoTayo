@@ -134,11 +134,11 @@
 
                         //var resultLat = document.getElementById('lat');
                         //reusltLat.innerHTML = lat_value.toString();
-                        document.getElementById('lat').value = lat_value;
+                        document.getElementById('lat').value = lat_value.toString();
                         
                         //var resultLon = document.getElementById('lon');
                         //resultLon.innerHTML = lon_value.toString();
-                        document.getElementById('lon').value = lon_value;
+                        document.getElementById('lon').value = lon_value.toString();
                     }
                 });
             }
@@ -156,7 +156,7 @@
         
         // 위도, 경도 값 input의 value에 추가
         var lat_value = latlng.getLat()
-        var lon_value = latlng.getLon()
+        var lon_value = latlng.getLng()
 
         //var resultLat = document.getElementById('lat');
         //reusltLat.innerHTML = lat_value.toString();
