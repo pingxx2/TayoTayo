@@ -42,13 +42,15 @@ def parking_add(request):
         form = ParkingCreateForm(request.POST)
         if form.is_valid():
             parking = form.save(commit=False)
+            messages(Warning, parking.lat())
+            messages(Warning, parking.lon())
             parking.owner = request.user
             parking.save()
-            
+
             return redirect('common:mypage')
     else:
         form = ParkingCreateForm()
     
-    context={}
+    context={'form':form}
 
-    return render(request, 'common/mypage.html', context)
+    return render(request, 'common/add.html', context)
