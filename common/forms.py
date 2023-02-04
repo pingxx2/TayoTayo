@@ -51,4 +51,4 @@ class UserChangeForm(forms.ModelForm):
 class ParkingCreateForm(forms.ModelForm):
     class Meta:
         model = Parking
-        fields = ('parking_number', 'parking_name', 'lat', 'lon', 'res_state', 'detail_add', 'finish_car_number', 'parking_car_number')
+        fields = ('parking_number', 'parking_name', 'lat', 'lon', 'res_state', 'detail_add', 'finish_car_number')

@@ -51,6 +51,14 @@ class User(AbstractBaseUser):
     
     def __str__(self):
         return self.phone_number
+
+    def to_json(self):
+        return {
+            "id" : self.id,
+            "phone_number" : self.phone_number,
+            "email" : self.email,
+            "car_number" : self.car_number,
+        }
         
 def has_perm(self, perm, obj=None):
     """
@@ -92,8 +100,20 @@ class Parking(models.Model):
     res_state = models.CharField(max_length=20)
     detail_add = models.CharField(max_length=255, null=True, blank=True)
     finish_car_number = models.CharField(max_length=20, null=True, blank=True)
-    parking_car_number = models.CharField(max_length=20, null=True, blank=True)
     owner = models.ForeignKey("User", on_delete=models.CASCADE, db_column='owner') # user모델에서 parking_set로 관계 생김
+
+    def to_json(self):
+        return {
+            "parking_number" : self.parking_number,
+            "parking_name" : self.parking_name,
+            "lat" : self.lat,
+            "lon" : self.lon,
+            "res_state" : self.res_state,
+            "detail_add" : self.detail_add,
+            "finish_car_number" : self.finish_car_number,
+            "owner" : self.owner
+        }
+
 
 
 class Res(models.Model):
@@ -102,8 +122,18 @@ class Res(models.Model):
 
     phone_number : 전화번호, 외래키, User 테이블과 연결
     """
-    phone_number = models.ForeignKey("User", on_delete=models.SET_NULL, db_column='phone_number', null=True, blank=True)
+    user_id = models.ForeignKey("User", on_delete=models.SET_NULL, db_column='phone_number', null=True, blank=True)
     parking_number = models.ForeignKey("Parking", on_delete=models.SET_NULL, db_column='parking_number', null=True, blank=True)
     time = models.CharField(max_length=20)
     end_time = models.CharField(max_length=100)
     res_car_number = models.CharField(max_length=20)
+
+    def to_json(self):
+        return {
+            "id" : self.id,
+            "user_id" : self.user_id,
+            "parking_number" : self.parking_number,
+            "time" : self.time,
+            "end_time" : self.end_time,
+            "res_car_number" : self.res_car_number
+        }
