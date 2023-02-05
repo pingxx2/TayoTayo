@@ -75,7 +75,7 @@
               </table>
             </div>
           </div>
-        </div>
+        </div></br></br>
         {% endif %}
         {% include 'footer.html'%} 
       </div>
@@ -89,10 +89,12 @@
 {% block script%}
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ce903cdfbeb38247132d86bac3923a8b"></script>
 <script>
+  // 1. 테이블 선택하면 해당 주차관리로 넘어감
   $(document).ready(function(){
     $(".table-row").on('click', function(){
       location.href = $(this).data('uri');
     });
   });
+  // 1. 끝
   </script>
 {% endblock %}

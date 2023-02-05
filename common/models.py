@@ -122,7 +122,7 @@ class Res(models.Model):
 
     phone_number : 전화번호, 외래키, User 테이블과 연결
     """
-    user_id = models.ForeignKey("User", on_delete=models.SET_NULL, db_column='phone_number', null=True, blank=True)
+    user_id = models.ForeignKey("User", on_delete=models.SET_NULL, db_column='user_id', null=True, blank=True)
     parking_number = models.ForeignKey("Parking", on_delete=models.SET_NULL, db_column='parking_number', null=True, blank=True)
     time = models.CharField(max_length=20)
     start_time = models.CharField(max_length=100)

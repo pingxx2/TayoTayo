@@ -10,12 +10,53 @@
       {% include 'navbar.html'%} 
       <div class="android-content mdl-layout__content">
         <a name="top"></a>
-        
+        </br>
+        </br>
+        <div class="android-be-customized-section mdl-typography--text-center" style="display:flex;justify-content:center;align-items:center;top:30%;">
+          <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:40%">
+            <div class="mdl-card__title">
+              <h2 class="mdl-card__title-text">주차장리스트</h2></br>
+            </div>
+            <div class="mdl-card__supporting-text">
+              <div id="map" style="width:100%;height:350px;"></div>
+              <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width:100%;">
+                <thead>
+                  <tr>
+                    <td style="text-align:center">번호</td>
+                    <td style="text-align:center">이름</td>
+                    <td style="text-align:center">위도</td>
+                    <td style="text-align:center">경도</td>
+                    <td style="text-align:center">예약가능상태</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- tayo/views.py에서 보낸 parking_list / for문으로 돌려서 전체 출력-->
+                  <!-- {%  : 논리적인 문법 사용할 때 ex) for, if문 등 -->
+                  <!-- {{  : 값 출력할때 이용 -->
+                  {% for parking_list in parking_list.all %}
+                    <tr>
+                      <!-- parking_list.parking_name : parknig_list의 parking_name을 참조하겠다는 의미-->
+                      <td style="text-align:center">{{parking_list.parking_number}}</td>
+                      <td style="text-align:center">{{parking_list.parking_name}}</td>
+                      <td style="text-align:center">{{parking_list.lat}}</td>
+                      <td style="text-align:center">{{parking_list.lon}}</td>
+                      <td style="text-align:center">{{parking_list.res_state}}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         {% include 'footer.html'%} 
       </div>
     </div>
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   </body>
 </html>
-
+{% endblock %}
+{% block script %}
+<script>
+  //지도는 여기
+</script>
 {% endblock %}

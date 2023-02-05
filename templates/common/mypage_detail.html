@@ -84,25 +84,28 @@
                 </label></br></br>
               <div id="map" style="width:100%;height:350px;"></div>
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                
-                [예약 현황]</br></br>
-                <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width:100%">
-                  <thead>
-                    <tr>
-                      <td style="text-align:center">예약시간</td>
-                      <td style="text-align:center">종료시각</td>
-                      <td style="text-align:center">차량번호</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td style="text-align:center"></td>
-                      <td style="text-align:center"></td>
-                      <td style="text-align:center"></td>
-                    </tr>
-                  </tbody>
-                </table>
+                </br>예약 현황</br>
               </div>
+              <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width:100%;">
+                <thead>
+                  <tr>
+                    <td style="text-align:center">예약시간</td>
+                    <td style="text-align:center">시작시각</td>
+                    <td style="text-align:center">종료시각</td>
+                    <td style="text-align:center">차량번호</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in parking_res.all %}
+                    <tr>
+                      <td style="text-align:center">{{i.time}}</td>
+                      <td style="text-align:center">{{i.start_time}}</td>
+                      <td style="text-align:center">{{i.end_time}}</td>
+                      <td style="text-align:center">{{i.res_car_number}}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -148,11 +151,12 @@
   }
   // 3. 끝
 
-  //4. 예약상태 스위치 변경되면 DB에 반영하기
-  // 추가중
-
-
-  
-  
+  // 4. 예약상태 스위치 변경되면 DB에 반영하기
+  $(document).ready(function(){
+    $("#switch").change(function(){
+      location.href = $(this).data('uri');
+    })
+  })
+  // 4. 끝
 </script>
 {% endblock %}

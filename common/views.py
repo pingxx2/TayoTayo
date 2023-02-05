@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect, get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404, redirect, resolve_url
 from common.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -16,7 +16,6 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             phone_number = form.cleaned_data.get('phone_number')
             user = authenticate(password=raw_password, phone_number=phone_number)
@@ -33,6 +32,29 @@ def mypage(request):
 def add(request):
     return render(request, 'common/add.html')
 
+@login_required(login_url='common:login')
+def myreserve(request):
+    """
+    나의 예약현황 출력
+    """
+    # 선택한 주차장 예약 리스트
+    res = Res.objects.filter(user_id=request.user)
+
+    context={
+        'res':res,
+    }
+
+    return render(request, 'common/myreserve.html', context)
+
+@login_required(login_url='common:login')
+def myreserve_delete(request, res_id):
+    """
+    나의 예약현황에서 선택 행 삭제
+    """
+    delete_res = get_object_or_404(Res, pk=res_id)
+    delete_res.delete()
+
+    return redirect('/common/myreserve')
 
 @login_required(login_url='common:login')
 def parking_add(request):
@@ -52,49 +74,43 @@ def parking_add(request):
     else:
         form = ParkingCreateForm()
 
-    parkings = Parking.objects.all()
     
     context={
         'form':form,
-        'parkings_js' : json.dumps([pkg.json() for pkg in parkings]),
     }
 
     return render(request, 'common/add.html', context)
-
-@login_required(login_url='common:login')
-def parking_modify(request, parking_number):
-    """
-    parking 테이블 값 수정
-    """
-    parking = get_object_or_404(Parking, pk=parking_number)
-    if request.user != parking.owner:
-        messages.error(request, "변경권한이 없습니다.")
-        return redirect('common:mypage_detail')
-    if request.method == "POST":
-        form = ParkingCreateForm(request.POST, instance=parking)
-        if form.is_valid():
-            parking = form.save(commit=False)
-            if(parking.res_state=="ON"):
-                parking.res_state="OFF"
-            else:
-                parking.res_state="ON"
-            parking.save()
-            return redirect('common:mypage_detail')
-    else:
-        form = ParkingCreateForm(instance=parking)
-    
-    context={
-        'form' : form
-    }
-
-    return render(request, 'common/mypage_detail.html', context)
 
 @login_required(login_url='common:login')
 def mypage_detail(request, parking_number):
     """
     주차장 관리 출력
     """
+    # 선택한 주차장 리스트
     parking_user = get_object_or_404(Parking, pk=parking_number)
-    context = { 'parking_user' : parking_user }
+    # 선택한 주차장 예약 리스트
+    parking_res = Res.objects.filter(parking_number=parking_number)
+    
+    context = { 'parking_user' : parking_user, 'parking_res' : parking_res }
 
     return render(request, 'common/mypage_detail.html', context)
+
+
+@login_required(login_url='common:login')
+def parking_modify(request, parking_number):
+    """
+    parking 테이블 값 수정
+    """
+    parking_on = Parking.objects.get(parking_number=parking_number)
+
+    if parking_on.res_state == "ON":
+        parking_on.res_state = "OFF"
+        parking_on.save()
+    else:
+        parking_on.res_state = "ON"
+        parking_on.save()
+
+    return redirect(f'/common/mypage/{parking_number}')
+
+
+
