@@ -50,4 +50,11 @@ def info(request):
     return render(request, 'tayo/info.html')
 
 def parking(request):
-    return render(request, 'tayo/parking.html')
+    # 전체 주차장 리스트 불러오기
+    parking_list = Parking.objects.all()
+
+    # context에 담아서 tayo/reserve.html에 전송
+    context ={
+        'parking_list' : parking_list
+    }
+    return render(request, 'tayo/parking.html', context)

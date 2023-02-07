@@ -11,8 +11,7 @@
         <a name="top"></a>
         <div class="android-customized-section mdl-typography--text-center" style="margin-top:-5%">
           <div class="logo-font android-slogan">
-            주차장현황
-            <h6>2023년 1월 28일 기준</h6>
+            주차장현황</br></br>
           </div>
           <center style=""><div id="map" style="width:60%;height:550px;"></div></center>
         </div></br></br>
@@ -29,41 +28,49 @@
 <script>
   var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
+        center: new kakao.maps.LatLng(37.528195, 126.984208), // 지도의 중심좌표
+        level: 8 // 지도의 확대 레벨
     };
 
-var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+  var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
-// 마커를 표시할 위치입니다 
-var position =  new kakao.maps.LatLng(33.450701, 126.570667);
+  var positions = [
+    {% for i in parking_list.all %}
+      {
+        content : '<span class="info-title">'+'{{i.parking_name}}'+'</span>',
+        latlng : new kakao.maps.LatLng({{i.lat}}, {{i.lon}})
+      },
+    {% endfor %}
+  ]
 
-// 마커를 생성합니다
-var marker = new kakao.maps.Marker({
-  position: position
-});
+  for (var i = 0; i < positions.length; i ++){
+    var marker = new kakao.maps.Marker({
+      map: map, // 마커를 표시할 지도
+      position: positions[i].latlng // 마커의 위치
+    });
 
-// 마커를 지도에 표시합니다.
-marker.setMap(map);
+    // 마커에 표시할 인포윈도우를 생성합니다 
+    var infowindow = new kakao.maps.InfoWindow({
+      content: positions[i].content // 인포윈도우에 표시할 내용
+    });
 
-// 마커에 커서가 오버됐을 때 마커 위에 표시할 인포윈도우를 생성합니다
-var iwContent = '<div style="padding:5px;">Hello World!</div>'; // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+    kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+  }
 
-// 인포윈도우를 생성합니다
-var infowindow = new kakao.maps.InfoWindow({
-    content : iwContent
-});
+  // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+  function makeOverListener(map, marker, infowindow) {
+    return function() {
+        infowindow.open(map, marker);
+    };
+  }
 
-// 마커에 마우스오버 이벤트를 등록합니다
-kakao.maps.event.addListener(marker, 'mouseover', function() {
-  // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
-    infowindow.open(map, marker);
-});
+  // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+  function makeOutListener(infowindow) {
+    return function() {
+        infowindow.close();
+    };
+  }
 
-// 마커에 마우스아웃 이벤트를 등록합니다
-kakao.maps.event.addListener(marker, 'mouseout', function() {
-    // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
-    infowindow.close();
-});
 </script>
 {% endblock%}

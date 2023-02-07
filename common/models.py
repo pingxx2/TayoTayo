@@ -125,8 +125,8 @@ class Res(models.Model):
     user_id = models.ForeignKey("User", on_delete=models.SET_NULL, db_column='user_id', null=True, blank=True)
     parking_number = models.ForeignKey("Parking", on_delete=models.SET_NULL, db_column='parking_number', null=True, blank=True)
     time = models.CharField(max_length=20)
-    start_time = models.CharField(max_length=100)
-    end_time = models.CharField(max_length=100)
+    start_time = models.DateTimeField(max_length=100)
+    end_time = models.DateTimeField(max_length=100)
     res_car_number = models.CharField(max_length=20)
 
     def to_json(self):
