@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect, get_object_or_404, redirect, resolve_url
+from django.shortcuts import render, redirect, get_object_or_404
 from common.forms import UserCreationForm, UserChangeForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -65,8 +65,6 @@ def parking_add(request):
         form = ParkingCreateForm(request.POST)
         if form.is_valid():
             parking = form.save(commit=False)
-            messages(Warning, parking.lat())
-            messages(Warning, parking.lon())
             parking.owner = request.user
             parking.save()
 
