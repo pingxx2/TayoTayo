@@ -12,7 +12,7 @@
         </br>
         </br>
         <div class="android-be-customized-section mdl-typography--text-center" style="display:flex;justify-content:center;align-items:center;top:30%;">
-          <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:40%;">
+          <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:80%;">
             <div class="mdl-card__title">
               <h2 class="mdl-card__title-text">주차장 예약하기</h2>
             </div>
@@ -36,7 +36,7 @@
                   차량번호를 입력해주세요
                   <input type="text" class="mdl-textfield__input" id="res_car_number" name="res_car_number" value=""></input>
                   </br></br>
-                  <button type="submit" style="position:static" onclick="location.href='{% url 'tayo:reserve' %}'" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+                  <button id="reserve_btn" type="submit" style="position:static" onclick="location.href='{% url 'tayo:reserve' %}'" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
                     예약하기
                   </button>
                 </form>
@@ -79,7 +79,8 @@
         content : '<span class="info-title">'+'{{i.parking_name}}'+'</span>',
         latlng : new kakao.maps.LatLng({{i.lat}}, {{i.lon}}),
         parking_number : '{{i.parking_number}}',
-        parking_name : '{{i.parking_name}}'
+        parking_name : '{{i.parking_name}}',
+        owner : '{{i.owner}}'
       },
     {% endfor %}
   ]
@@ -113,13 +114,20 @@
     return function(){
       infowindow.open(map, marker);
 
-      var message = "선택한 주차장은 " + positions[count].parking_name + '입니다.';
-    
+      if(positions[count].owner == '{{request.user}}'){
+        var message = "본인의 주차장은 예약할 수 없습니다.";
+        $("#reserve_btn").attr("disabled", true);
+      }
+      else{
+        var message = "선택한 주차장은 " + positions[count].parking_name + '입니다.';
+        $("#reserve_btn").attr("disabled", false);
+      }
+      
       var resultDiv = document.getElementById('result'); 
       resultDiv.innerHTML = message;
       var numberDiv = document.getElementById('parking_number'); 
       numberDiv.value = positions[count].parking_number;
-
+      
     };
   };
   // 3. 끝

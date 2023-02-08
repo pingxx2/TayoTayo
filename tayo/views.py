@@ -13,10 +13,12 @@ def reserve(request):
     """
     # 전체 주차장 리스트 불러오기
     parking_list = Parking.objects.all()
+    res_list = Res.objects.all()
 
     # context에 담아서 tayo/reserve.html에 전송
     context ={
-        'parking_list' : parking_list
+        'parking_list' : parking_list,
+        'res_list' : res_list
     }
     return render(request, 'tayo/reserve.html', context)
 
@@ -43,7 +45,7 @@ def reserve_add(request):
         'form':form,
     }
 
-    return render(request, 'common/myreserve.html', context)
+    return render(request, 'tayo/reserve.html', context)
 
 
 def info(request):

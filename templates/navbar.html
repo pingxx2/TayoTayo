@@ -42,5 +42,14 @@
       <a class="mdl-navigation__link" href="{% url 'tayo:info'%}">이용방법</a>
       <a class="mdl-navigation__link" href="{% url 'tayo:reserve'%}">예약하기</a>
       <a class="mdl-navigation__link" href="{% url 'tayo:parking'%}">주차장현황</a>
+      <a class="mdl-navigation__link" href="#"></a>
+      {% if user.is_authenticated %}
+        <a class="mdl-navigation__link" href="{% url 'common:mypage'%}">마이페이지</a>
+        <a class="mdl-navigation__link" href="{% url 'common:myreserve'%}">나의예약</a>
+        <a class="mdl-navigation__link" href="{% url 'common:logout'%}">로그아웃</a>
+      {% else %}
+        <a class="mdl-navigation__link" href="{% url 'common:login'%}">로그인</a>
+      {% endif %}
     </nav>
+    
 </div>
