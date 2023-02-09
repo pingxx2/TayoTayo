@@ -15,7 +15,7 @@
         <div class="android-be-customized-section mdl-typography--text-center" style="display:flex;justify-content:center;align-items:center;top:30%;">
           <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:80%">
             <div class="mdl-card__supporting-text">
-              <form method="post" class="post-form" action="{% url 'common:login' %}">
+              <form method="post" class="post-form" action="{% url 'common:login' %}" autocomplete="off">
                 {% csrf_token %}
                 {% include 'form_errors.html'%}
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">

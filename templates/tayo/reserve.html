@@ -18,7 +18,7 @@
             </div>
             <div class="mdl-card__supporting-text">
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <form method="post" action="{% url 'tayo:reserve_add' %}" class="post-form">
+                <form method="post" action="{% url 'tayo:reserve_add' %}" class="post-form" autocomplete="off">
                   {% csrf_token %}
                   {% include 'form_errors.html'%}</br>
                   주차시간을 선택해주세요</br></br>
@@ -122,7 +122,7 @@
         var message = "선택한 주차장은 " + positions[count].parking_name + '입니다.';
         $("#reserve_btn").attr("disabled", false);
       }
-      
+
       var resultDiv = document.getElementById('result'); 
       resultDiv.innerHTML = message;
       var numberDiv = document.getElementById('parking_number'); 
