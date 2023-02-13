@@ -86,26 +86,28 @@
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 </br>예약 현황</br>
               </div>
-              <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width:100%;">
-                <thead>
-                  <tr>
-                    <td style="text-align:center">예약시간</td>
-                    <td style="text-align:center">시작시각</td>
-                    <td style="text-align:center">종료시각</td>
-                    <td style="text-align:center">차량번호</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for i in parking_res.all %}
+              <div style="width:100%; overflow:auto;">
+                <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width:100%;">
+                  <thead>
                     <tr>
-                      <td style="text-align:center">{{i.time}}</td>
-                      <td style="text-align:center">{{i.start_time}}</td>
-                      <td style="text-align:center">{{i.end_time}}</td>
-                      <td style="text-align:center">{{i.res_car_number}}</td>
+                      <td style="text-align:center">예약시간</td>
+                      <td style="text-align:center">시작시각</td>
+                      <td style="text-align:center">종료시각</td>
+                      <td style="text-align:center">차량번호</td>
                     </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {% for i in parking_res.all %}
+                      <tr>
+                        <td style="text-align:center">{{i.time}}</td>
+                        <td style="text-align:center">{{i.start_time}}</td>
+                        <td style="text-align:center">{{i.end_time}}</td>
+                        <td style="text-align:center">{{i.res_car_number}}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

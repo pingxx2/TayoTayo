@@ -13,33 +13,35 @@
         </br>
         </br>
         <div class="android-be-customized-section mdl-typography--text-center" style="display:flex;justify-content:center;align-items:center;top:30%;">
-          <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:50%">
+          <div class="demo-card-wide mdl-card mdl-shadow--2dp" style="align-items:center; width:80%">
             <div class="mdl-card__title">
               <h2 class="mdl-card__title-text">나의 예약</h2></br>
             </div>
             <div class="mdl-card__supporting-text">
               * 예약은 수정할 수 없으니 취소하고 다시 신청 부탁드립니다.</br>
               * 예약목록을 선택하면 취소할 수 있습니다.</br></br>
-              <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width:100%;">
-                <thead>
-                  <tr>
-                    <td style="text-align:center">예약시간</td>
-                    <td style="text-align:center">시작시각</td>
-                    <td style="text-align:center">종료시각</td>
-                    <td style="text-align:center">차량번호</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for i in res.all %}
-                    <tr data-uri="{% url 'common:myreserve_delete' i.id %}" class="table-row">
-                      <td style="text-align:center">{{i.time}}</td>
-                      <td style="text-align:center">{{i.start_time}}</td>
-                      <td style="text-align:center">{{i.end_time}}</td>
-                      <td style="text-align:center">{{i.res_car_number}}</td>
+              <div style="width:100%; overflow:auto;">
+                <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width:100%;">
+                  <thead>
+                    <tr>
+                      <td style="text-align:center">예약시간</td>
+                      <td style="text-align:center">시작시각</td>
+                      <td style="text-align:center">종료시각</td>
+                      <td style="text-align:center">차량번호</td>
                     </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {% for i in res.all %}
+                      <tr data-uri="{% url 'common:myreserve_delete' i.id %}" class="table-row">
+                        <td style="text-align:center">{{i.time}}</td>
+                        <td style="text-align:center">{{i.start_time}}</td>
+                        <td style="text-align:center">{{i.end_time}}</td>
+                        <td style="text-align:center">{{i.res_car_number}}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
